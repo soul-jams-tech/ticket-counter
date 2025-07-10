@@ -1,7 +1,7 @@
 from threading import Lock
 
 lock = Lock()
-_ticket_count = 0
+_ticket_count = 26  # Set this to your current real sold ticket count
 TICKET_CAP = 2000
 
 def update_count(num):
