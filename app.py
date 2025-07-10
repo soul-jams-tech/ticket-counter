@@ -19,7 +19,7 @@ if "prev_count" not in st.session_state:
 
 # Get count from Flask backend
 try:
-    response = requests.get("http://localhost:5000/count")  # Update with deployed backend URL
+    response = requests.get("https://ticket-counter.onrender.com/count")  # Update with deployed backend URL
     count = response.json()["count"]
 except:
     count = st.session_state.prev_count
