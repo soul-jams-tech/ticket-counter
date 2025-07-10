@@ -13,7 +13,7 @@ if "prev_count" not in st.session_state:
 
 # Get ticket count from backend
 try:
-    response = requests.get("http://localhost:5000/count")  # Replace with deployed backend
+    response = requests.get("https://ticket-counter.onrender.com/count")  # Replace with deployed backend
     count = response.json()["count"]
 except:
     count = st.session_state.prev_count
