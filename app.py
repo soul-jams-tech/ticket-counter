@@ -1,66 +1,64 @@
 import streamlit as st
 import requests
-import time
-from shared_state import get_count
 from streamlit_autorefresh import st_autorefresh
 
-# Set minimal page config
-st.set_page_config(page_title="Tickets Sold", layout="centered", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Soul Jams Live Counter", layout="centered")
 
-# Refresh every 5 seconds
+# Auto-refresh every 5 seconds
 st_autorefresh(interval=5000, key="counter-refresh")
-
-# Load sparkle sound
-audio_file = open("sparkle.mp3", "rb").read()
 
 # Track previous count
 if "prev_count" not in st.session_state:
     st.session_state.prev_count = 0
 
-# Get count from Flask backend
+# Get ticket count from backend
 try:
-    response = requests.get("https://ticket-counter.onrender.com/count")  # Update with deployed backend URL
+    response = requests.get("http://localhost:5000/count")  # Replace with deployed backend
     count = response.json()["count"]
 except:
     count = st.session_state.prev_count
 
-# Ticket phase logic
-phase = (
-    "Early Bird - ₹499" if count < 1200 else
-    "Regular - ₹755" if count < 1850 else
-    "Final Phase - ₹955"
-)
+# Determine current ticket phase
+def get_phase(c):
+    if c < 1200:
+        return "Early Bird - ₹499"
+    elif c < 1850:
+        return "Regular - ₹755"
+    else:
+        return "Final Phase - ₹955"
 
-# UI Styling
-st.markdown(
-    """
+# Styling: white bg, black text
+st.markdown("""
     <style>
     body {
-        background-color: white;
-        color: black;
-        font-family: 'Courier New', monospace;
+        background-color: white !important;
+        color: black !important;
+    }
+    .stApp {
+        background-color: white !important;
+        color: black !important;
+        font-family: monospace;
     }
     h1, h2, h3, .stMarkdown {
-        text-align: center;
+        text-align: center !important;
     }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
-# Render counter UI
+# UI
 st.title(f"{count} Tickets Sold")
 
-if count < 2000:
-    st.subheader(phase)
-else:
+if count >= 2000:
     st.success("🎉 SOLD OUT!")
+else:
+    st.subheader(get_phase(count))
 
-# Sound and Confetti Logic
+# Trigger sound + confetti
 if count > st.session_state.prev_count:
-    st.audio(audio_file, format="audio/mp3")
+    st.audio("sparkle.mp3", format="audio/mp3")
     if count % 50 == 0:
         st.balloons()
+    st.caption("🔊 Tap play above once to enable sparkle sound for future ticket sales.")
 
-# Update tracker
+# Update state
 st.session_state.prev_count = count
