@@ -1,3 +1,5 @@
-streamlit
 flask
+gunicorn
+streamlit
 requests
+streamlit-autorefresh
