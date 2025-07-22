@@ -20,9 +20,9 @@ except:
 
 # Determine current ticket phase
 def get_phase(c):
-    if c < 1200:
+    if c < 1534:
         return "Early Bird - ₹499"
-    elif c < 1850:
+    elif c < 1935:
         return "Regular - ₹755"
     else:
         return "Final Phase - ₹955"
